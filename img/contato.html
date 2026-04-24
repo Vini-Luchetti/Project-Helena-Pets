@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contato Sombrio | Clube do Corvo</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .contato-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: #1a1a1a;
+            padding: 3rem;
+            border-radius: 15px;
+            border: 2px solid #8a2be2;
+            text-align: center;
+            position: relative;
+            overflow: hidden; /* Garante que o corvo não 'fuja' antes da hora */
+        }
+
+        .campo-form {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #4b0082;
+            background-color: #0d0d0d;
+            color: white;
+            font-size: 1rem;
+        }
+
+        /* Animação do Corvo Voando */
+        @keyframes voarDoCorvo {
+            0% { transform: translate(-100px, 100px) scale(0.5) rotate(20deg); opacity: 0; }
+            30% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { transform: translate(800px, -600px) scale(2) rotate(-20deg); opacity: 0; }
+        }
+
+        #corvo-animado {
+            position: fixed;
+            bottom: -100px;
+            left: -100px;
+            font-size: 80px;
+            display: none;
+            z-index: 9999;
+            pointer-events: none; /* Para não atrapalhar cliques */
+        }
+
+        #area-feitico {
+            background-color: #2d004d;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px dashed #b366ff;
+            margin: 20px 0;
+            display: none;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="corvo-animado">🦅</div>
+
+    <header>
+        <div class="logo">
+            <h1>Clube do Corvo</h1>
+        </div>
+        <nav class="menu">
+            <a href="home.html">Adoção</a>
+            <a href="caldeirao.html">O Caldeirão</a>
+            <a href="contato.html" class="ativo">Contato Sombrio</a>
+        </nav>
+        <button class="btn-login" id="botaoNome">Entrar</button>
+    </header>
+
+    <main class="contato-container">
+        <h2>🦅 Torre dos Corvos Correios</h2>
+        <p style="margin-bottom: 20px;">Envie sua mensagem para as profundezas do castelo.</p>
+
+        <input type="email" id="emailCriança" class="campo-form" placeholder="Seu e-mail de Guardião(ã)">
+        <input type="text" id="assunto" class="campo-form" placeholder="Assunto da Mensagem">
+        <textarea id="mensagem" class="campo-form" placeholder="Escreva aqui seu segredo..."></textarea>
+
+        <div id="area-feitico">
+            <p style="color: #00ff88; font-weight: bold; font-size: 0.9rem;">📜 Pergaminho com Feitiço Anexado:</p>
+            <p id="texto-feitico-contato" style="color: #b366ff; margin-top: 10px; font-size: 0.85rem; word-break: break-all;"></p>
+        </div>
+
+        <button class="btn-comprar" onclick="enviarCorvo()">Lançar Corvo Mensageiro!</button>
+    </main>
+
+    <script src="script.js"></script>
+    <script>
+        window.onload = function() {
+            let nomeGuardado = localStorage.getItem('nomeDoPet');
+            if (nomeGuardado) {
+                document.getElementById('botaoNome').innerText = "Guardião: " + nomeGuardado;
+            }
+
+            let feitico = localStorage.getItem('ultimoFeitico');
+            if (feitico) {
+                // Aqui podemos exibir o feitiço com o efeito de Glitch se quiser, 
+                // mas para o contato, o texto limpo ajuda o Tio a ler!
+                document.getElementById('texto-feitico-contato').innerText = feitico;
+                document.getElementById('area-feitico').style.display = 'block';
+            }
+        };
+
+        function enviarCorvo() {
+            const email = document.getElementById('emailCriança').value;
+            const msg = document.getElementById('mensagem').value;
+            const corvo = document.getElementById('corvo-animado');
+            const nome = localStorage.getItem('nomeDoPet') || "Guardião";
+
+            if (msg === "") {
+                alert("O corvo não pode voar sem uma mensagem!");
+                return;
+            }
+
+            // Inicia a animação do corvo
+            corvo.style.display = 'block';
+            corvo.style.animation = 'voarDoCorvo 2.5s forwards';
+
+            // Após o corvo 'sumir' da tela, mostramos o aviso
+            setTimeout(() => {
+                let avisoFinal = `🦅 O corvo partiu, ${nome}!\n`;
+                if (email !== "") {
+                    avisoFinal += `Ele anotou seu e-mail (${email}) e trará a resposta nas sombras da noite!`;
+                } else {
+                    avisoFinal += `Sua mensagem foi entregue ao Mestre dos Magos!`;
+                }
+                
+                alert(avisoFinal);
+                
+                // Limpa tudo e reseta o corvo para a próxima
+                corvo.style.display = 'none';
+                corvo.style.animation = 'none';
+                document.getElementById('mensagem').value = "";
+                document.getElementById('assunto').value = "";
+            }, 2300);
+        }
+    </script>
+</body>
+</html>
